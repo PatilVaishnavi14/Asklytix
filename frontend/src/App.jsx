@@ -10,7 +10,8 @@ import Auth from './components/Auth'
 import { supabase } from './supabaseClient'
 import Logo from './components/Logo'
 import ParticleCanvas from './components/ParticleCanvas'
-import { Database, MessageSquare, BarChart2, Trash2, FileType, ArrowRight, LogOut, Loader2, ChevronLeft, ChevronRight } from 'lucide-react'
+import ThemeSelector from './components/ThemeSelector'
+import { Database, MessageSquare, BarChart2, Trash2, FileType, ArrowRight, LogOut, Loader2, ChevronLeft, ChevronRight, Sun, Moon } from 'lucide-react'
 
 function App() {
   const [datasetContext, setDatasetContext] = useState(null)
@@ -21,7 +22,22 @@ function App() {
   const [activeView, setActiveView] = useState('datasource') // 'datasource' | 'analysis'
   const [session, setSession] = useState(null)
   const [loadingSession, setLoadingSession] = useState(true)
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('asklytix_theme') || 'emerald'
+  })
   const mainRef = useRef(null)
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.add('light')
+    } else {
+      document.documentElement.classList.remove('light')
+      document.documentElement.classList.add('dark')
+    }
+    localStorage.setItem('asklytix_theme', theme)
+  }, [theme])
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -101,7 +117,7 @@ function App() {
           <Loader2 size={36} className="animate-spin" />
         </div>
       ) : !session ? (
-        <Auth />
+        <Auth currentTheme={theme} onSelectTheme={setTheme} onGuestLogin={() => setSession({ user: { id: 'default_dev_user', email: 'dev@asklytix.local' } })} />
       ) : (
         <div className="flex flex-col md:flex-row h-screen min-h-[100dvh] bg-transparent text-slate-100 overflow-x-hidden overflow-y-auto md:overflow-hidden font-sans relative z-10">
       {/* Sidebar */}
@@ -114,7 +130,7 @@ function App() {
             </div>
             {/* Mobile Logout button */}
             <button
-              onClick={() => supabase.auth.signOut()}
+              onClick={() => { supabase.auth.signOut().catch(() => {}); setSession(null); }}
               className="md:hidden flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium bg-slate-900/60 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-700 rounded-lg transition-all"
               title="Logout"
             >
@@ -191,7 +207,7 @@ function App() {
               />
             )}
             <button
-              onClick={() => supabase.auth.signOut()}
+              onClick={() => { supabase.auth.signOut().catch(() => {}); setSession(null); }}
               className="hidden md:flex items-center gap-2 px-3 py-1.5 text-xs font-medium bg-slate-800/80 hover:bg-red-500/20 text-slate-300 hover:text-red-400 border border-slate-700 hover:border-red-500/30 rounded-lg transition-all cursor-pointer shadow-sm"
               title="Logout of Asklytix"
             >

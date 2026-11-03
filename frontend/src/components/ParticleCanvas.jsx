@@ -17,16 +17,6 @@ export default function ParticleCanvas() {
     let particles = []
     let animationFrameId = null
 
-    // Luminous AskLytix Theme Colors (Vibrant Electric Cyan-Blue)
-    // Matches the slate-900 background with high-contrast, luminous stars & webs
-    const THEME_R = 96
-    const THEME_G = 165
-    const THEME_B = 250
-    const THEME_GLOW = '#38bdf8' // Electric Sky/Cyan Glow
-    const ACCENT_R = 56
-    const ACCENT_G = 189
-    const ACCENT_B = 248
-
     function initCanvas() {
       dpr = window.devicePixelRatio || 1
       width = window.innerWidth
@@ -101,6 +91,26 @@ export default function ParticleCanvas() {
       ctx.clearRect(0, 0, width, height)
       const pLen = particles.length
 
+      const themeAttr = document.documentElement.getAttribute('data-theme') || 'emerald'
+      let themeR = 16, themeG = 185, themeB = 129, themeGlow = '#10b981'
+      let accentR = 52, accentG = 211, accentB = 153
+      let alphaMult = 1.0
+
+      if (themeAttr === 'midnight') {
+        themeR = 56; themeG = 189; themeB = 248; themeGlow = '#38bdf8'
+        accentR = 99; accentG = 102; accentB = 241
+      } else if (themeAttr === 'obsidian') {
+        themeR = 34; themeG = 211; themeB = 238; themeGlow = '#22d3ee'
+        accentR = 255; accentG = 255; accentB = 255
+      } else if (themeAttr === 'violet') {
+        themeR = 192; themeG = 132; themeB = 252; themeGlow = '#c084fc'
+        accentR = 232; accentG = 121; accentB = 249
+      } else if (themeAttr === 'light') {
+        themeR = 99; themeG = 102; themeB = 241; themeGlow = '#6366f1'
+        accentR = 59; accentG = 130; accentB = 246
+        alphaMult = 0.55
+      }
+
       for (let i = 0; i < pLen; i++) {
         const p = particles[i]
         p.x += p.vx
@@ -112,7 +122,7 @@ export default function ParticleCanvas() {
         if (p.y < 0) { p.y = 0; p.vy *= -1; }
         else if (p.y > height) { p.y = height; p.vy *= -1; }
 
-        // Interactive Mouse Physics: Magnetic Attraction & High-Vis Connection Line
+        // Interactive Mouse Physics
         if (mouse.active) {
           const dx = mouse.x - p.x
           const dy = mouse.y - p.y
@@ -124,20 +134,20 @@ export default function ParticleCanvas() {
             p.vx *= 0.985
             p.vy *= 0.985
 
-            const lineAlpha = (1 - distToMouse / mouseMaxDist) * 0.52
+            const lineAlpha = (1 - distToMouse / mouseMaxDist) * 0.52 * alphaMult
             ctx.beginPath()
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(mouse.x, mouse.y)
-            ctx.strokeStyle = `rgba(${ACCENT_R}, ${ACCENT_G}, ${ACCENT_B}, ${lineAlpha.toFixed(3)})`
+            ctx.strokeStyle = `rgba(${accentR}, ${accentG}, ${accentB}, ${lineAlpha.toFixed(3)})`
             ctx.lineWidth = 1.15
-            ctx.shadowColor = THEME_GLOW
+            ctx.shadowColor = themeGlow
             ctx.shadowBlur = 4
             ctx.stroke()
             ctx.shadowBlur = 0
           }
         }
 
-        // Inter-Dot Connections with Enhanced Luminance & Crisp Lines
+        // Inter-Dot Connections
         for (let j = i + 1; j < pLen; j++) {
           const p2 = particles[j]
           const dx = p.x - p2.x
@@ -145,25 +155,25 @@ export default function ParticleCanvas() {
           const dist = Math.sqrt(dx * dx + dy * dy)
 
           if (dist < maxDist) {
-            const lineAlpha = (1 - dist / maxDist) * 0.38
+            const lineAlpha = (1 - dist / maxDist) * 0.38 * alphaMult
             ctx.beginPath()
             ctx.moveTo(p.x, p.y)
             ctx.lineTo(p2.x, p2.y)
-            ctx.strokeStyle = `rgba(${THEME_R}, ${THEME_G}, ${THEME_B}, ${lineAlpha.toFixed(3)})`
+            ctx.strokeStyle = `rgba(${themeR}, ${themeG}, ${themeB}, ${lineAlpha.toFixed(3)})`
             ctx.lineWidth = 0.95
             ctx.stroke()
           }
         }
 
-        // Draw Dot with Vibrant Glow & Dynamic Pulsation
+        // Draw Dot with Vibrant Glow
         p.pulse += p.pulseSpeed
-        const currentAlpha = p.baseAlpha + Math.sin(p.pulse) * 0.18
-        const clampedAlpha = Math.max(0.35, Math.min(1.0, currentAlpha))
+        const currentAlpha = (p.baseAlpha + Math.sin(p.pulse) * 0.18) * alphaMult
+        const clampedAlpha = Math.max(0.2, Math.min(1.0, currentAlpha))
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(${p.isBright ? ACCENT_R : THEME_R}, ${p.isBright ? ACCENT_G : THEME_G}, ${p.isBright ? ACCENT_B : THEME_B}, ${clampedAlpha.toFixed(3)})`
-        ctx.shadowColor = THEME_GLOW
+        ctx.fillStyle = `rgba(${p.isBright ? accentR : themeR}, ${p.isBright ? accentG : themeG}, ${p.isBright ? accentB : themeB}, ${clampedAlpha.toFixed(3)})`
+        ctx.shadowColor = themeGlow
         ctx.shadowBlur = p.isBright ? 6.5 : 3.5
         ctx.fill()
         ctx.shadowBlur = 0

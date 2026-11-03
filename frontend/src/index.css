@@ -1,18 +1,199 @@
 @import "tailwindcss";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0f172a; /* slate-900 background for dashboard */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================================
+   1. EMERALD FOREST THEME (Default Active Theme)
+   Deep Pine/Teal Dark Night with Radiant Emerald & Mint Glow
+   ======================================================== */
+:root,
+:root[data-theme="emerald"] {
+  color-scheme: dark;
+  color: #ecfdf5;
+  background-color: #041410;
+
+  --theme-id: "emerald";
+  --theme-bg: #041410;
+  --theme-surface: #061f18;
+  --theme-accent: #10b981;
+  --theme-glow: #34d399;
+
+  /* Forest Slate Matrix */
+  --color-slate-950: #020b08;
+  --color-slate-900: #061f18;
+  --color-slate-800: #0a2e24;
+  --color-slate-700: #124537;
+  --color-slate-600: #1b624f;
+  --color-slate-500: #10b981;
+  --color-slate-400: #6ee7b7;
+  --color-slate-300: #a7f3d0;
+  --color-slate-200: #d1fae5;
+  --color-slate-100: #ecfdf5;
+  --color-slate-50: #ffffff;
+
+  /* Radiant Emerald Primary Accents */
+  --color-blue-300: #6ee7b7;
+  --color-blue-400: #34d399;
+  --color-blue-500: #10b981;
+  --color-blue-600: #059669;
+  --color-indigo-400: #2dd4bf;
+  --color-indigo-500: #14b8a6;
+  --color-indigo-600: #0d9488;
+}
+
+/* ========================================================
+   2. MIDNIGHT NAVY THEME
+   Cosmic Deep Navy Blue with Luminous Cyan/Sky Glow
+   ======================================================== */
+:root[data-theme="midnight"] {
+  color-scheme: dark;
+  color: #f8fafc;
+  background-color: #030712;
+
+  --theme-id: "midnight";
+  --theme-bg: #030712;
+  --theme-surface: #0b1120;
+  --theme-accent: #38bdf8;
+  --theme-glow: #38bdf8;
+
+  --color-slate-950: #010409;
+  --color-slate-900: #0b1120;
+  --color-slate-800: #0f172a;
+  --color-slate-700: #1e293b;
+  --color-slate-600: #334155;
+  --color-slate-500: #64748b;
+  --color-slate-400: #94a3b8;
+  --color-slate-300: #cbd5e1;
+  --color-slate-200: #e2e8f0;
+  --color-slate-100: #f8fafc;
+  --color-slate-50: #ffffff;
+
+  --color-blue-300: #7dd3fc;
+  --color-blue-400: #38bdf8;
+  --color-blue-500: #0ea5e9;
+  --color-blue-600: #0284c7;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+}
+
+/* ========================================================
+   3. OBSIDIAN OLED THEME
+   Pitch Black Minimal Matrix with Crisp Neon Borders
+   ======================================================== */
+:root[data-theme="obsidian"] {
+  color-scheme: dark;
+  color: #ffffff;
+  background-color: #000000;
+
+  --theme-id: "obsidian";
+  --theme-bg: #000000;
+  --theme-surface: #09090b;
+  --theme-accent: #22d3ee;
+  --theme-glow: #22d3ee;
+
+  --color-slate-950: #000000;
+  --color-slate-900: #09090b;
+  --color-slate-800: #121214;
+  --color-slate-700: #27272a;
+  --color-slate-600: #3f3f46;
+  --color-slate-500: #71717a;
+  --color-slate-400: #a1a1aa;
+  --color-slate-300: #d4d4d8;
+  --color-slate-200: #e4e4e7;
+  --color-slate-100: #fafafa;
+  --color-slate-50: #ffffff;
+
+  --color-blue-300: #67e8f9;
+  --color-blue-400: #22d3ee;
+  --color-blue-500: #06b6d4;
+  --color-blue-600: #0891b2;
+  --color-indigo-400: #38bdf8;
+  --color-indigo-500: #0ea5e9;
+  --color-indigo-600: #0284c7;
+}
+
+/* ========================================================
+   4. COSMIC VIOLET THEME
+   Cyberpunk Deep Purple with Radiant Violet & Neon Magenta
+   ======================================================== */
+:root[data-theme="violet"] {
+  color-scheme: dark;
+  color: #faf5ff;
+  background-color: #090514;
+
+  --theme-id: "violet";
+  --theme-bg: #090514;
+  --theme-surface: #120b22;
+  --theme-accent: #c084fc;
+  --theme-glow: #c084fc;
+
+  --color-slate-950: #05020a;
+  --color-slate-900: #120b22;
+  --color-slate-800: #1a1033;
+  --color-slate-700: #2c1d54;
+  --color-slate-600: #442d82;
+  --color-slate-500: #8b5cf6;
+  --color-slate-400: #c084fc;
+  --color-slate-300: #e9d5ff;
+  --color-slate-200: #f3e8ff;
+  --color-slate-100: #faf5ff;
+  --color-slate-50: #ffffff;
+
+  --color-blue-300: #d8b4fe;
+  --color-blue-400: #c084fc;
+  --color-blue-500: #a855f7;
+  --color-blue-600: #9333ea;
+  --color-indigo-400: #e879f9;
+  --color-indigo-500: #d946ef;
+  --color-indigo-600: #c026d3;
+}
+
+/* ========================================================
+   5. SLATE LIGHT THEME
+   Clean Slate-White Dashboard with Rich Slate Contrast
+   ======================================================== */
+:root[data-theme="light"] {
+  color-scheme: light;
+  color: #0f172a;
+  background-color: #f8fafc;
+
+  --theme-id: "light";
+  --theme-bg: #f8fafc;
+  --theme-surface: #ffffff;
+  --theme-accent: #3b82f6;
+  --theme-glow: #60a5fa;
+
+  --color-slate-950: #ffffff;
+  --color-slate-900: #ffffff;
+  --color-slate-800: #f8fafc;
+  --color-slate-700: #e2e8f0;
+  --color-slate-600: #cbd5e1;
+  --color-slate-500: #64748b;
+  --color-slate-400: #475569;
+  --color-slate-300: #334155;
+  --color-slate-200: #1e293b;
+  --color-slate-100: #0f172a;
+  --color-slate-50: #020617;
+
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-indigo-400: #818cf8;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
 }
 
 body {
@@ -20,6 +201,9 @@ body {
   display: flex;
   min-width: 320px;
   min-height: 100dvh;
+  background-color: inherit;
+  color: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -36,4 +220,35 @@ body {
   height: 100vh;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.3);
+  border-radius: 9999px;
+}
+
+:root[data-theme="midnight"] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+}
+
+:root[data-theme="violet"] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(192, 132, 252, 0.3);
+}
+
+:root[data-theme="light"] .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.6);
 }

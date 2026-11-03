@@ -47,7 +47,7 @@ export default function Visualizer({ chartData, visualNumber = 1, title }) {
     // Deep clone data to avoid in-place mutations
     const rawData = chartData.data || []
     const enhancedData = rawData.map((trace, idx) => {
-      const defaultColor = MODERN_PALETTE[idx % MODERN_PALETTE.length]
+      const defaultColor = activePalette[idx % activePalette.length]
       const t = { ...trace }
 
       if (t.type === 'bar') {
@@ -63,7 +63,7 @@ export default function Visualizer({ chartData, visualNumber = 1, title }) {
       } else if (t.type === 'pie') {
         t.hole = t.hole || 0.52
         t.marker = {
-          colors: t.marker?.colors || MODERN_PALETTE,
+          colors: t.marker?.colors || activePalette,
           line: {
             color: '#0f172a',
             width: 2.2,
@@ -109,19 +109,74 @@ export default function Visualizer({ chartData, visualNumber = 1, title }) {
     const rawTitle = chartData.layout?.title?.text || (typeof chartData.layout?.title === 'string' ? chartData.layout?.title : '') || title || ''
     const cleanTitle = typeof rawTitle === 'string' ? rawTitle.replace(/<[^>]*>?/gm, '').trim() : ''
 
+    const themeAttr = document.documentElement.getAttribute('data-theme') || 'emerald'
+    const activePalette = THEME_PALETTES[themeAttr] || THEME_PALETTES.emerald
+
+    let chartFontColor = '#a7f3d0'
+    let chartTitleColor = '#ecfdf5'
+    let chartGridColor = 'rgba(16, 185, 129, 0.18)'
+    let chartLineColor = 'rgba(16, 185, 129, 0.35)'
+    let legendBg = 'rgba(6, 31, 24, 0.75)'
+    let legendBorder = 'rgba(18, 69, 55, 0.6)'
+    let legendFontColor = '#d1fae5'
+    let hoverBg = 'rgba(6, 31, 24, 0.95)'
+    let hoverTextColor = '#ecfdf5'
+
+    if (themeAttr === 'midnight') {
+      chartFontColor = '#94a3b8'
+      chartTitleColor = '#f8fafc'
+      chartGridColor = 'rgba(51, 65, 85, 0.45)'
+      chartLineColor = 'rgba(71, 85, 105, 0.4)'
+      legendBg = 'rgba(15, 23, 42, 0.6)'
+      legendBorder = 'rgba(51, 65, 85, 0.45)'
+      legendFontColor = '#cbd5e1'
+      hoverBg = 'rgba(15, 23, 42, 0.95)'
+      hoverTextColor = '#f8fafc'
+    } else if (themeAttr === 'obsidian') {
+      chartFontColor = '#a1a1aa'
+      chartTitleColor = '#fafafa'
+      chartGridColor = 'rgba(39, 39, 42, 0.6)'
+      chartLineColor = 'rgba(63, 63, 70, 0.5)'
+      legendBg = 'rgba(9, 9, 11, 0.85)'
+      legendBorder = 'rgba(39, 39, 42, 0.8)'
+      legendFontColor = '#e4e4e7'
+      hoverBg = 'rgba(9, 9, 11, 0.95)'
+      hoverTextColor = '#ffffff'
+    } else if (themeAttr === 'violet') {
+      chartFontColor = '#c084fc'
+      chartTitleColor = '#faf5ff'
+      chartGridColor = 'rgba(44, 29, 84, 0.45)'
+      chartLineColor = 'rgba(68, 45, 130, 0.4)'
+      legendBg = 'rgba(18, 11, 34, 0.75)'
+      legendBorder = 'rgba(44, 29, 84, 0.6)'
+      legendFontColor = '#e9d5ff'
+      hoverBg = 'rgba(18, 11, 34, 0.95)'
+      hoverTextColor = '#faf5ff'
+    } else if (themeAttr === 'light') {
+      chartFontColor = '#475569'
+      chartTitleColor = '#0f172a'
+      chartGridColor = 'rgba(226, 232, 240, 0.85)'
+      chartLineColor = 'rgba(203, 213, 225, 0.8)'
+      legendBg = 'rgba(255, 255, 255, 0.85)'
+      legendBorder = 'rgba(226, 232, 240, 0.9)'
+      legendFontColor = '#334155'
+      hoverBg = 'rgba(255, 255, 255, 0.95)'
+      hoverTextColor = '#0f172a'
+    }
+
     const enhancedLayout = {
       ...chartData.layout,
       autosize: true,
       paper_bgcolor: 'transparent',
       plot_bgcolor: 'transparent',
-      font: { color: '#94a3b8', family: 'Inter, system-ui, sans-serif', size: 12 },
+      font: { color: chartFontColor, family: 'Inter, system-ui, sans-serif', size: 12 },
       margin: { t: cleanTitle ? 50 : 25, r: 30, l: 55, b: 50, ...chartData.layout?.margin },
       title: cleanTitle ? {
         text: cleanTitle,
         font: {
           family: 'Inter, system-ui, sans-serif',
           size: 16,
-          color: '#f8fafc',
+          color: chartTitleColor,
           weight: 700,
           ...chartData.layout?.title?.font
         },
@@ -136,32 +191,32 @@ export default function Visualizer({ chartData, visualNumber = 1, title }) {
         y: -0.22,
         xanchor: 'center',
         x: 0.5,
-        font: { family: 'Inter, sans-serif', color: '#cbd5e1', size: 11 },
-        bgcolor: 'rgba(15, 23, 42, 0.6)',
-        bordercolor: 'rgba(51, 65, 85, 0.45)',
+        font: { family: 'Inter, sans-serif', color: legendFontColor, size: 11 },
+        bgcolor: legendBg,
+        bordercolor: legendBorder,
         borderwidth: 1,
         ...chartData.layout?.legend
       },
       hoverlabel: {
-        bgcolor: 'rgba(15, 23, 42, 0.95)',
+        bgcolor: hoverBg,
         bordercolor: '#38bdf8',
-        font: { family: 'Inter, system-ui, sans-serif', size: 12.5, color: '#f8fafc' },
+        font: { family: 'Inter, system-ui, sans-serif', size: 12.5, color: hoverTextColor },
         align: 'left',
         ...chartData.layout?.hoverlabel
       },
       xaxis: {
         ...chartData.layout?.xaxis,
-        gridcolor: 'rgba(51, 65, 85, 0.45)',
-        zerolinecolor: 'rgba(71, 85, 105, 0.6)',
-        linecolor: 'rgba(71, 85, 105, 0.4)',
-        tickfont: { family: 'Inter, sans-serif', color: '#94a3b8', size: 11 }
+        gridcolor: chartGridColor,
+        zerolinecolor: chartLineColor,
+        linecolor: chartLineColor,
+        tickfont: { family: 'Inter, sans-serif', color: chartFontColor, size: 11 }
       },
       yaxis: {
         ...chartData.layout?.yaxis,
-        gridcolor: 'rgba(51, 65, 85, 0.45)',
-        zerolinecolor: 'rgba(71, 85, 105, 0.6)',
-        linecolor: 'rgba(71, 85, 105, 0.4)',
-        tickfont: { family: 'Inter, sans-serif', color: '#94a3b8', size: 11 }
+        gridcolor: chartGridColor,
+        zerolinecolor: chartLineColor,
+        linecolor: chartLineColor,
+        tickfont: { family: 'Inter, sans-serif', color: chartFontColor, size: 11 }
       }
     }
 

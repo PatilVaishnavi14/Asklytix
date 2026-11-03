@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react'
 import { supabase, isSupabaseConfigured } from '../supabaseClient'
 import Logo from './Logo'
-import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react'
+import ThemeSelector from './ThemeSelector'
+import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, CheckCircle2, ArrowRight, Sun, Moon } from 'lucide-react'
 
-export default function Auth() {
+export default function Auth({ onGuestLogin, currentTheme, onSelectTheme }) {
   const [isRegister, setIsRegister] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -91,6 +92,11 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-transparent text-slate-100 flex items-center justify-center p-4 font-sans relative z-10 overflow-hidden">
+      {onSelectTheme && (
+        <div className="absolute top-4 right-4 z-30">
+          <ThemeSelector currentTheme={currentTheme} onSelectTheme={onSelectTheme} />
+        </div>
+      )}
       {/* Background Soft Ambient Light */}
       <div className="absolute w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[130px] pointer-events-none" />
 
@@ -262,6 +268,17 @@ export default function Auth() {
                 </>
               )}
             </button>
+
+            {onGuestLogin && (
+              <button
+                type="button"
+                onClick={onGuestLogin}
+                className="w-full mt-2.5 py-2.5 px-4 bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white font-medium text-xs rounded-xl border border-slate-700/70 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Continue as Guest (Local Dev Mode)</span>
+                <ArrowRight size={13} />
+              </button>
+            )}
           </form>
 
           {/* Simple Switch Link */}
